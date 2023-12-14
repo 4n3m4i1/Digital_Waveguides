@@ -71,7 +71,15 @@ void Simple_ALU(struct Waveguide_Block *wgb, uint8_t wgb_clock){
 }
 
 int Destroy_Simple_Math_Block(struct Waveguide_Block *wgb){
+    int retval = EXIT_FAILURE;
+    if(wgb){
+        struct Waveblock_Simple_Math_Block *pt;
+        pt = (struct Waveblock_Simple_Math_Block *)wgb->block_function_data;
+        free(pt);
 
+        retval = EXIT_SUCCESS;
+    }
+    return retval;
 }
 
 #endif

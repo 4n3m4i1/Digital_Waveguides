@@ -217,10 +217,9 @@ int Wire_Blocks(struct Waveguide_Controller *wgc, wg_data_t **ep0_0, wg_data_t *
     return retval;
 }
 
-int Pre_Run_Cleanup(struct Waveguide_Controller *wgc){
-    int retval;
-    if(!wgc) retval = EXIT_FAILURE;
-    else {
+struct Waveguide_Block **Pre_Run_Cleanup(struct Waveguide_Controller *wgc){
+    struct Waveguide_Block **retval;
+    if(wgc){
         wgc->blocks = (struct Waveguide_Block **)malloc(wgc->num_blocks * sizeof(struct Waveguide_Block *));
         if(wgc->blocks){
             struct Waveguide_Block *pt;
@@ -229,8 +228,9 @@ int Pre_Run_Cleanup(struct Waveguide_Controller *wgc){
                 wgc->blocks[n] = pt;
                 pt = pt->next;
             }
+            retval = wgc->blocks;
         } else {
-            retval = EXIT_FAILURE;
+            retval = nullptr;
         }
     }
     return retval;
