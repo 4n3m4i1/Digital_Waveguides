@@ -4,6 +4,18 @@
 #include "Waveblock_Base.h"
 #include <math.h>
 
+/*
+    Table of Contents:
+        - Sine
+        - Periodic Pulse Train
+        - Conditional Pulse Train / Step
+        - PCM
+*/
+
+//////////////////////////////////////////////////////
+//      Sine Oscillator
+//////////////////////////////////////////////////////
+
 struct Waveblock_Sine_OSC {
     double      Fs;
     double      omega;  // rad/s
@@ -50,6 +62,22 @@ int Destroy_Sine_OSC(struct Waveguide_Block *wgb){
     }
     return retval;
 }
+
+//////////////////////////////////////////////////////
+//      Pulse Train
+//////////////////////////////////////////////////////
+
+enum WGB_PULSE_PARAMS {
+    NO_PULSES,
+    SINGLE_PULSE,
+    INFINITE_PULSES = UINT64_MAX
+};
+
+struct Waveblock_Pulse_OSC {
+    uint64_t    num_pulses;
+    uint64_t    pulse_period;   // in clks
+    uint64_t    pulse_width;    // in clks
+};
 
 
 #endif

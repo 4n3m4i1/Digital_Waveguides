@@ -6,6 +6,7 @@
 #include "Waveblock_WAV_Output.h"
 #include "Waveblock_OSC.h"
 #include "Waveblock_Math.h"
+#include "Waveblock_IO.h"
 
 
 

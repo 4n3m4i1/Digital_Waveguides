@@ -77,7 +77,8 @@ enum BLOCK_TYPES {
     B_HPF,
     B_BPF,
     B_OUTPUT,
-    B_SIG_SRC
+    B_SIG_SRC,
+    B_SINGLE_VAR
 };
 
 enum TIMINGREQS {

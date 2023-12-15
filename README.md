@@ -48,4 +48,4 @@ useful for future DDR blocks.
 	- Delay Line (of arbitrary N length)
 - Output
 	- 16-bit WAVE (via easyWAVE.h)
-	- (soon) .txt, .csv
+	- .txt, .csv, or other standard ascii files

@@ -16,6 +16,8 @@ int main(int argc, char **argv){
     Block_t SIN_OSC2    = Add_Block(&Control, "Sine Source 2");
     Block_t Adder       = Add_Block(&Control, "Terminal Summer");
     Block_t Adder2      = Add_Block(&Control, "Signal Summer");
+    Block_t MUL_0       = Add_Block(&Control, "Mod Amp");
+    Block_t MUL_1       = Add_Block(&Control, "AM Apply");
     printf("Blocks Created Successfully!\n");
 
     printf("Cleaning Up...\n");
@@ -28,10 +30,12 @@ int main(int argc, char **argv){
     Init_WAV_Output(block[WAVE_out], Control.runtime, Control.clk_hz);
     // Create Sine wave source, Fs = clkHz, freq = 500hz, 0 deg phase shift
     Init_Sine_OSC(block[SIN_OSC], Control.clk_hz, 500, 0);
-    Init_Sine_OSC(block[SIN_OSC2], Control.clk_hz, 1500, 90);
+    Init_Sine_OSC(block[SIN_OSC2], Control.clk_hz, 20, 0);
     // Initiate an adder
     Init_Simple_Math_Block(block[Adder], B_ADD);            // Can do either
     Init_Simple_Math_Block(Control.blocks[Adder2], B_ADD);  //  block addressing scheme!
+    Init_Simple_Math_Block(Control.blocks[MUL_0], B_MUL);  //  block addressing scheme!
+    Init_Simple_Math_Block(Control.blocks[MUL_1], B_MUL);  //  block addressing scheme!
     printf("All Blocks Initiated.\n");
 
 
@@ -45,6 +49,9 @@ int main(int argc, char **argv){
     Wire_Blocks(&Control, &Control.blocks[Adder]->d_out_0,      &Control.blocks[WAVE_out]->d_in_0);
     printf("%u Wires Placed.\n", Control.num_wires);
 
+    FILE *fp = fopen("Output.txt", "w");
+    printf("File Opened!\n");
+
     uint8_t clk = 0;
 
     printf("Running Sim for %u ticks\n", Control.samples_2_run);
@@ -56,12 +63,17 @@ int main(int argc, char **argv){
         Simple_ALU(Control.blocks[Adder], clk);                     //
         Simple_ALU(Control.blocks[Adder2], clk);                    // Add on rising, out falling
         WAV_Listener(Control.blocks[WAVE_out], clk);                // Sneaks a peak every RISING
+        
+        FILE_Listener(fp, clk, block[WAVE_out]->d_in_0, RUN_AT_0, RUN_TILL_END);
+
         clk = Waveblock_Clock();
     }
     printf("Sim Done!\n");
 
     // Create output file :)
     WAV_Create_File(Control.blocks[WAVE_out], "CoolWAVE.wav", Control.clk_hz, 1);
+    fclose(fp);
+    printf("Files Closed!\n");
 
     // Destroy the functional block components
     Destroy_Delay_Line(Control.blocks[delay_0]);
